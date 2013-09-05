@@ -1,7 +1,8 @@
 {
-    "name": "datibbaw/Silex-DynamoDb-Session-Provider",
+    "name": "datibbaw/silex-dynamodb-session-provider",
     "description": "Amazon DynamoDB session provider",
     "minimum-stability": "dev",
+    "tags": ["silex", "aws", "dynamodb", "session"],
     "authors": [
         {
             "name": "Tjerk Meesters",
