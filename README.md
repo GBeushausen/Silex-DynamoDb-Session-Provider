@@ -4,7 +4,7 @@ Silex-DynamoDb-Session-Provider
 Provides support in Silex projects for sessions that are stored on Amazon DynamoDB
 
 Basic Usage
-===========
+-----------
 
     use DynamoDbSession\DynamoDbSessionServiceProvider;
 
