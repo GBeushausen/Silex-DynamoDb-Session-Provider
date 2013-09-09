@@ -15,10 +15,8 @@ class DynamoDbSessionServiceProvider extends SessionServiceProvider
     {
         parent::register($app);
 
-        /** @noinspection PhpParamsInspection */
-        $app['session.storage'] = $app->share(function($app) {
-            $handler = new DynamoDbSessionHandler($this->getDynamoDbClient($app['aws']), $app['session.dynamodb.options']);
-            return new NativeSessionStorage($app['session.storage.options'], $handler);
+        $app['session.storage.handler'] = $app->share(function($app) {
+            return new DynamoDbSessionHandler($this->getDynamoDbClient($app['aws']), $app['session.dynamodb.options']);
         });
 
         $app['session.dynamodb.options'] = array();
