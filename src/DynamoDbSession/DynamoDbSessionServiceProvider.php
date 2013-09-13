@@ -4,10 +4,9 @@ namespace DynamoDbSession;
 
 use Aws\Common\Aws;
 use Aws\DynamoDb\DynamoDbClient;
+use Aws\DynamoDb\Session\SessionHandler;
 use Silex\Application;
 use Silex\Provider\SessionServiceProvider;
-use Symfony\Component\HttpFoundation\Session\Storage\Handler\NativeSessionHandler;
-use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
 
 class DynamoDbSessionServiceProvider extends SessionServiceProvider
 {
@@ -15,8 +14,14 @@ class DynamoDbSessionServiceProvider extends SessionServiceProvider
     {
         parent::register($app);
 
+        /** @noinspection PhpParamsInspection */
         $app['session.storage.handler'] = $app->share(function($app) {
-            return new DynamoDbSessionHandler($this->getDynamoDbClient($app['aws']), $app['session.dynamodb.options']);
+            $config = $app['session.dynamodb.options'];
+            if (!array_key_exists('dynamodb_client', $config)) {
+                $config['dynamodb_client'] = $this->getDynamoDbClient($app['aws']);
+            }
+
+            return SessionHandler::factory($config);
         });
 
         $app['session.dynamodb.options'] = array();
