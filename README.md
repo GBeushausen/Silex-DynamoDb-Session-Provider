@@ -7,8 +7,8 @@ Typically PHP Sessions are not scalable. As soon as a load balanced / multi serv
 a better solution. Amazons DynamoDB NoSQL storage engine is the fast, easy and scalable solution for that problem.
 
 Just implement it in your project ( see below ). You also need a solution to get rid of stale sessions from the table. Since
-deleting many old sessions can take a lot of write capacity units, it's best to write an AWS Lambda function which does that 
-overnight.
+deleting many old sessions can take a lot of write capacity units, it's best to configure a cron job and run the Garbage
+Collector over night. 
 
 Gunnar Beushausen
 
@@ -42,3 +42,6 @@ Basic Usage
 
     $app->register(new SessionServiceProvider());
     $app->register(new DynamoDbSessionServiceProvider());
+    
+    //To run the Garbage Collector in order to remove stale and old sessions from the table, run the following code:
+    $app['session.dynamodb.garbagecollect'];
