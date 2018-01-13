@@ -1,19 +1,18 @@
 {
-    "name": "datibbaw/silex-dynamodb-session-provider",
-    "description": "Amazon DynamoDB session provider",
-    "minimum-stability": "dev",
+    "name": "gbeushausen/silex-dynamodb-session-provider",
+    "description": "Amazon DynamoDB session provider for Silex 2.x",
     "tags": ["silex", "aws", "dynamodb", "session"],
     "authors": [
         {
-            "name": "Tjerk Meesters",
-            "email": "datibbaw@php.net"
+            "name": "Gunnar Beushausen",
+            "email": "public@gunnar-beushausen.de"
         }
     ],
     "license": "MIT",
     "require": {
-        "php": ">=5.3.2",
-        "aws/aws-sdk-php": ">=2.4.6",
-        "silex/silex": "~1.0"
+        "php": ">=5.5.9",
+        "aws/aws-sdk-php": ">=3.19",
+        "silex/silex": "~2.0"
     },
     "autoload": {
         "psr-0": {

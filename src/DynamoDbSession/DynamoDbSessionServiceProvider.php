@@ -2,37 +2,37 @@
 
 namespace DynamoDbSession;
 
-use Aws\Common\Aws;
-use Aws\DynamoDb\DynamoDbClient;
-use Aws\DynamoDb\Session\SessionHandler;
-use Silex\Application;
-use Silex\Provider\SessionServiceProvider;
 
-class DynamoDbSessionServiceProvider extends SessionServiceProvider
+use Aws\DynamoDb\SessionHandler;
+use Aws\Sdk;
+use Pimple\Container;
+use Pimple\ServiceProviderInterface;
+
+class DynamoDbSessionServiceProvider implements ServiceProviderInterface
 {
-    public function register(Application $app)
-    {
-        parent::register($app);
+	public function register(Container $app)
+	{
+		/** @noinspection PhpParamsInspection */
+		$app['session.storage.handler'] = function () use ($app) {
+			$config = $app['session.dynamodb.options'];
+			if (!array_key_exists('dynamodb_client', $config)) {
+				$config['dynamodb_client'] = $this->getDynamoDbClient($app['AwsSdk']);
+			}
 
-        /** @noinspection PhpParamsInspection */
-        $app['session.storage.handler'] = $app->share(function($app) {
-            $config = $app['session.dynamodb.options'];
-            if (!array_key_exists('dynamodb_client', $config)) {
-                $config['dynamodb_client'] = $this->getDynamoDbClient($app['aws']);
-            }
+			$sessionHandler = SessionHandler::fromClient($config['dynamodb_client'], [
+				'table_name' => $app['session.dynamodb.options']['table_name'],
+			]);
+			$sessionHandler->register();
 
-            return SessionHandler::factory($config);
-        });
-
-        $app['session.dynamodb.options'] = array();
-    }
-
-    /**
-     * @param Aws $aws
-     * @return DynamoDbClient
-     */
-    private function getDynamoDbClient(Aws $aws)
-    {
-        return $aws->get('dynamodb');
-    }
+			return $sessionHandler;
+		};
+	}
+	/**
+	 * @param Sdk $aws
+	 * @return DynamoDbClient
+	 */
+	private function getDynamoDbClient(Sdk $aws)
+	{
+		return $aws->createDynamoDb();
+	}
 }
